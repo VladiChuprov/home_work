@@ -1,65 +1,64 @@
+print("*" * 10, " Игра Крестики-нолики для двоих игроков с полем 3х3", "*" * 10)
 
+field = list(range(1, 10))
 
-num = list(range(1,10))
-
-def print_coub(num):
-    print ('-'*13)
+def playing_field(field):
+    print("-" * 13)
     for i in range(3):
-        print(f'| {num[0+3*i]} | {num[1+ i*3]} | {num[2+i*3]} |')
-        print ('-'*13)
+        print("|", field[0+i*3], "|", field[1+i*3], "|", field[2+i*3], "|")
+        print("-" * 13)
 
-
-def player_move(player_action):
+def take_input(player_token):
     valid = False
     while not valid:
-        player_number = input( "Укажите ячейку куда поставите  "+player_action+ ' ?  ')
+        player_answer = input(
+            "Выберите номер ячейки, куда поставим " + player_token+"?\n ")
         try:
-             player_number =int(player_number)
+            player_answer = int(player_answer)
         except:
-            print("введите число ")
+            print("Некорректный ввод. Вы уверены, что ввели число?")
             continue
-        if 1<=player_number<=9 :
-            if str(num[player_number-1]) not in 'XO':
-                num[player_number-1]=player_action
+        if player_answer >= 1 and player_answer <= 9:
+            if (str(field[player_answer-1]) not in "XO"):
+                field[player_answer-1] = player_token
                 valid = True
-            else :
-                print('Клетка занята')
+            else:
+                print("Эта клетка уже занята!")
         else:
-            print("Введите номер ячейки от 1 до 9")
+            print("Некорректный ввод. Номера ячеек от 1 до 9.")
 
 
-
-def win_line(num):
-    win_number =(((0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6),
-                 (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)))
-    for each in win_number:
-        if num[each[0]]==num[each[1]]==num[each[2]]:
-            return num[each[0]]
+def check_win(field):
+    win_coord = ((0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6),
+                 (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6))
+    for each in win_coord:
+        if field[each[0]] == field[each[1]] == field[each[2]]:
+            return field[each[0]]
     return False
 
-def main(num):
-    count =0
-    win=False
+
+def main(field):
+    counter = 0
+    win = False
     while not win:
-        print_coub(num)
-        if count%2 !=0:
-            player_move('O')
-            player_move('X')
-        count+=1
-        if count > 4:
-           tmp = win_line(num)
-           if tmp:            
-              print(f'Выиграл игрок, играющий за "{tmp}"!')              
-              win = True
-              break
-        if count == 9:                  
-            print('Ничья!')
+        playing_field(field)
+        if counter % 2 == 0:
+            take_input("X")
+        else:
+            take_input("O")
+        counter += 1
+        if counter > 4:
+            tmp = check_win(field)
+            if tmp:
+                print(f'Выиграл игрок, играющий за {tmp}!')
+                win = True
+                break
+        if counter == 9:
+            print("Ничья!")
             break
-    print_coub(num)
+    playing_field(field)
 
-
-main(num)
-
+main(field)
 input("Нажмите Enter для выхода!")
 
 
